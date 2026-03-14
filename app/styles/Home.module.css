@@ -1,0 +1,56 @@
+.main {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+    .main {
+        margin-left: 0;
+    }
+}
+
+.main h1 {
+    font-family: roboto;
+    text-decoration: underline;
+    font-weight: bold;
+    margin: 20px auto 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    color: rgb(41, 40, 39);
+    text-transform: uppercase;
+}
+
+.main table {
+    width: 320px;
+    background-color: rgb(253, 249, 251);
+    border: 5px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 2px 2px 30px rgba(53, 48, 48, 0.767);
+    
+    /* ✅ `border-spacing` ব্যবহার করা হলো */
+    border-collapse: separate; 
+    border-spacing: 3px; /* সারি ও কলামের মধ্যে gap */
+    overflow: hidden;  /* Border-radius ঠিকভাবে কাজ করার জন্য */
+}
+
+/* ✅ `th` ও `td`-তে padding ও border-spacing যুক্ত করা হলো */
+.main table th, .main table td {
+    padding: 10px; /* ✅ প্রতিটি সেলের মধ্যে gap থাকবে */
+    text-align: left;
+    font-weight: bold;
+    border: 2px solid rgb(58, 58, 58);
+}
+
+.main table th {
+    background-color: rgb(11, 21, 110);
+    color: white;
+}
+
+.main span {
+    color: #483eff;
+}

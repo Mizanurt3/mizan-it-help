@@ -1,0 +1,29 @@
+.container {
+  width: 100%;
+  overflow-x: auto;
+
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size:smaller;
+  }
+  
+.table th, .table td {
+  border: 2px solid #ddd;
+  padding: 2px;
+}
+
+.table td {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+  
