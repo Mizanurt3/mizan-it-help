@@ -1,3 +1,4 @@
+// middleware.js
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
@@ -7,38 +8,56 @@ export function middleware(request) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
-  // 🔹 লগইন ছাড়া পাবলিক রুট
-  const publicPaths = ["/", "/login"];
+  // পাবলিক রুট — লগইন ছাড়াই ঢুকতে পারবে
+  const publicPaths = ["/", "/login", "/api"];   // /api সাধারণত public রাখা ভালো
 
-  // পাবলিক পেজে গেলে কোনো চেক লাগবে না
-  if (publicPaths.some((p) => pathname.startsWith(p))) {
+  if (publicPaths.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
     return NextResponse.next();
   }
 
-  // ✅ প্রোটেক্টেড রুট: admin বা my-accounting
+  // টোকেন না থাকলে → লগইন পেজে পাঠাও
   if (!token) {
-    console.log("⛔ কোনো টোকেন নেই → রিডাইরেক্ট /login");
+    console.log("No token → redirect to /login");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (pathname.startsWith("/admin") && decoded.role !== "admin") {
-      return NextResponse.redirect(new URL("/", request.url));
+    // অ্যাডমিন রুট চেক (root + sub-path সব)
+    const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+
+    if (isAdminRoute) {
+      if (decoded.role !== "admin") {
+        console.log(`Non-admin trying to access ${pathname} → redirect to /`);
+        return NextResponse.redirect(new URL("/", request.url));
+      }
     }
 
-    if (pathname.startsWith("/my-accounting") && decoded.role !== "cashier") {
-      return NextResponse.redirect(new URL("/", request.url));
+    // cashier রুট চেক (যদি থাকে)
+    const isCashierRoute = pathname === "/my-accounting" || pathname.startsWith("/my-accounting/");
+
+    if (isCashierRoute) {
+      if (decoded.role !== "cashier") {
+        console.log(`Non-cashier trying to access ${pathname} → redirect to /`);
+        return NextResponse.redirect(new URL("/", request.url));
+      }
     }
 
+    // সব ঠিক থাকলে → পেজ দেখাও
     return NextResponse.next();
+
   } catch (err) {
-    console.log("⛔ Token Invalid:", err.message);
+    console.log("Invalid token:", err.message);
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/my-accounting/:path*"], // ✅ শুধু এই দুই রুট প্রোটেক্ট হবে
+  matcher: [
+    "/admin/:path*",          // /admin, /admin/anything
+    "/admin",                 // root /admin page
+    "/my-accounting/:path*",
+    "/my-accounting"
+  ]
 };
