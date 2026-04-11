@@ -3,74 +3,45 @@ import pool from "@/lib/db";
 
 export async function POST(request) {
   try {
-    const formData = await request.formData();
+    let data;
 
-    const data = {
-      mobile: formData.get("mobile"),
-      name: formData.get("name"),
-      name_bn: formData.get("name_bn"),
-      father: formData.get("father"),
-      father_bn: formData.get("father_bn"),
-      mother: formData.get("mother"),
-      mother_bn: formData.get("mother_bn"),
-      religion: formData.get("religion"),
-      gender: formData.get("gender"),
-      marital_status: formData.get("marital_status"),
-      spouse_name: formData.get("spouse_name"),
-      email: formData.get("email"),
-      quota: formData.get("quota"),
-      dep_status: formData.get("dep_status"),
-      nid: formData.get("nid"),
-      breg: formData.get("breg"),
-      passport: formData.get("passport"),
-      dob: formData.get("dob"),
-      present_careof: formData.get("present_careof"),
-      present_village: formData.get("present_village"),
-      present_district: formData.get("present_district"),
-      present_post: formData.get("present_post"),
-      present_postcode: formData.get("present_postcode"),
-      present_upazila: formData.get("present_upazila"),
-      permanent_careof: formData.get("permanent_careof"),
-      permanent_village: formData.get("permanent_village"),
-      permanent_district: formData.get("permanent_district"),
-      permanent_post: formData.get("permanent_post"),
-      permanent_postcode: formData.get("permanent_postcode"),
-      permanent_upazila: formData.get("permanent_upazila"),
-      ssc_exam: formData.get("ssc_exam"),
-      ssc_board: formData.get("ssc_board"),
-      ssc_roll: formData.get("ssc_roll"),
-      ssc_year: formData.get("ssc_year"),
-      ssc_group: formData.get("ssc_group"),
-      ssc_result_type: formData.get("ssc_result_type"),
-      ssc_result: formData.get("ssc_result"),
-      hsc_exam: formData.get("hsc_exam"),
-      hsc_board: formData.get("hsc_board"),
-      hsc_roll: formData.get("hsc_roll"),
-      hsc_year: formData.get("hsc_year"),
-      hsc_group: formData.get("hsc_group"),
-      hsc_result_type: formData.get("hsc_result_type"),
-      hsc_result: formData.get("hsc_result"),
-      gra_exam: formData.get("gra_exam"),
-      gra_subject: formData.get("gra_subject"),
-      gra_institute: formData.get("gra_institute"),
-      gra_year: formData.get("gra_year"),
-      gra_duration: formData.get("gra_duration"),
-      gra_result_type: formData.get("gra_result_type"),
-      gra_result: formData.get("gra_result"),
-      mas_exam: formData.get("mas_exam"),
-      mas_subject: formData.get("mas_subject"),
-      mas_institute: formData.get("mas_institute"),
-      mas_year: formData.get("mas_year"),
-      mas_duration: formData.get("mas_duration"),
-      mas_result_type: formData.get("mas_result_type"),
-      mas_result: formData.get("mas_result")
-    };
+    // JSON বা FormData — দুটোই হ্যান্ডেল করবে
+    const contentType = request.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      data = await request.json();
+    } else if (contentType.includes("form-data") || contentType.includes("x-www-form-urlencoded")) {
+      const formData = await request.formData();
+      data = Object.fromEntries(formData.entries());
+    } else {
+      return Response.json({ 
+        status: "error", 
+        message: "Unsupported Content-Type" 
+      }, { status: 400 });
+    }
 
     if (!data.mobile) {
       return Response.json({ status: "error", message: "Mobile number is required" }, { status: 400 });
     }
 
-    const values = Object.values(data);
+    const values = [
+      data.mobile, data.name, data.name_bn, data.father, data.father_bn, 
+      data.mother, data.mother_bn, data.religion, data.gender, data.marital_status,
+      data.spouse_name, data.email, data.quota, data.dep_status, data.nid, 
+      data.breg, data.passport, data.dob,
+      data.present_careof, data.present_village, data.present_district, 
+      data.present_post, data.present_postcode, data.present_upazila,
+      data.permanent_careof, data.permanent_village, data.permanent_district, 
+      data.permanent_post, data.permanent_postcode, data.permanent_upazila,
+      data.ssc_exam, data.ssc_board, data.ssc_roll, data.ssc_year, 
+      data.ssc_group, data.ssc_result_type, data.ssc_result,
+      data.hsc_exam, data.hsc_board, data.hsc_roll, data.hsc_year, 
+      data.hsc_group, data.hsc_result_type, data.hsc_result,
+      data.gra_exam, data.gra_subject, data.gra_institute, data.gra_year, 
+      data.gra_duration, data.gra_result_type, data.gra_result,
+      data.mas_exam, data.mas_subject, data.mas_institute, data.mas_year, 
+      data.mas_duration, data.mas_result_type, data.mas_result
+    ];
 
     const result = await pool.query(`
       INSERT INTO job_applicants (
@@ -121,7 +92,7 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error("Save Error:", error);
+    console.error("Save API Error:", error);
     return Response.json({ 
       status: "error", 
       message: "Failed to save data: " + error.message 
