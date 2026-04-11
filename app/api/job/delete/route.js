@@ -1,3 +1,4 @@
+// app/api/job/delete/route.js
 import pool from "@/lib/db";
 import jwt from "jsonwebtoken";
 
@@ -14,16 +15,15 @@ export async function DELETE(request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
     const mobile = searchParams.get("mobile");
 
-    if (!id && !mobile) {
-      return Response.json({ status: "error", message: "ID or Mobile required" }, { status: 400 });
+    if (!mobile) {
+      return Response.json({ status: "error", message: "Mobile number required" }, { status: 400 });
     }
 
     const result = await pool.query(
-      "DELETE FROM job_applicants WHERE id = $1 OR mobile = $2 RETURNING id, mobile, name",
-      [id, mobile]
+      "DELETE FROM job_applicants WHERE mobile = $1 RETURNING id, mobile, name",
+      [mobile]
     );
 
     if (result.rows.length === 0) {
@@ -32,8 +32,7 @@ export async function DELETE(request) {
 
     return Response.json({ 
       status: "success", 
-      message: "Record deleted successfully",
-      deleted: result.rows[0]
+      message: "Record deleted successfully" 
     });
 
   } catch (error) {
