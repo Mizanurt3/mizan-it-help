@@ -31,7 +31,7 @@ export async function GET(request) {
     });
 
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Fetch Error:", error);
     return Response.json({ 
       status: "error", 
       message: "Server error" 

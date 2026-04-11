@@ -3,7 +3,6 @@ import pool from "@/lib/db";
 
 export async function POST(request) {
   try {
-    // Form Data পড়া (HTML form থেকে আসে)
     const formData = await request.formData();
 
     const data = {
@@ -68,13 +67,11 @@ export async function POST(request) {
     };
 
     if (!data.mobile) {
-      return Response.json({ 
-        status: "error", 
-        message: "Mobile number is required" 
-      }, { status: 400 });
+      return Response.json({ status: "error", message: "Mobile number is required" }, { status: 400 });
     }
 
-    // Database Insert/Update
+    const values = Object.values(data);
+
     const result = await pool.query(`
       INSERT INTO job_applicants (
         mobile, name, name_bn, father, father_bn, mother, mother_bn, religion, gender,
@@ -85,10 +82,7 @@ export async function POST(request) {
         hsc_exam, hsc_board, hsc_roll, hsc_year, hsc_group, hsc_result_type, hsc_result,
         gra_exam, gra_subject, gra_institute, gra_year, gra_duration, gra_result_type, gra_result,
         mas_exam, mas_subject, mas_institute, mas_year, mas_duration, mas_result_type, mas_result
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18,
-                $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34,
-                $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50,
-                $51, $52, $53, $54, $55, $56, $57, $58)
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$40,$41,$42,$43,$44,$45,$46,$47,$48,$49,$50,$51,$52,$53,$54,$55,$56,$57,$58)
       ON CONFLICT (mobile) DO UPDATE SET
         name = EXCLUDED.name, name_bn = EXCLUDED.name_bn, father = EXCLUDED.father,
         father_bn = EXCLUDED.father_bn, mother = EXCLUDED.mother, mother_bn = EXCLUDED.mother_bn,
@@ -118,7 +112,7 @@ export async function POST(request) {
         mas_result = EXCLUDED.mas_result,
         updated_at = CURRENT_TIMESTAMP
       RETURNING *
-    `, Object.values(data));
+    `, values);
 
     return Response.json({
       status: "success",
@@ -127,7 +121,7 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error("Save API Error:", error);
+    console.error("Save Error:", error);
     return Response.json({ 
       status: "error", 
       message: "Failed to save data: " + error.message 
