@@ -2,10 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"]
-    },
-    "baseUrl": "."
+    }
   }
 }
-
-
 
