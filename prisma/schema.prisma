@@ -1,0 +1,107 @@
+-- Enum: Status
+CREATE TYPE "Status" AS ENUM ('PENDING', 'ACTIVE', 'BLOCKED');
+
+-- Table: users
+CREATE TABLE "users" (
+    "mobileNumber" TEXT PRIMARY KEY,
+    "status" "Status" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+    "lastLoginAt" TIMESTAMP,
+    "notes" TEXT
+);
+
+-- Table: device_bindings
+CREATE TABLE "device_bindings" (
+    "id" TEXT PRIMARY KEY,
+    "deviceId" TEXT UNIQUE NOT NULL,
+    "boundAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+    "userMobile" TEXT UNIQUE NOT NULL,
+
+    CONSTRAINT "device_bindings_user_fkey"
+        FOREIGN KEY ("userMobile") REFERENCES "users"("mobileNumber")
+        ON DELETE CASCADE
+);
+
+-- Table: job_data
+CREATE TABLE "job_data" (
+    "id" TEXT PRIMARY KEY,
+    "customerMobile" TEXT NOT NULL,
+
+    -- 58 Fields
+    "name" TEXT,
+    "name_bn" TEXT,
+    "father" TEXT,
+    "father_bn" TEXT,
+    "mother" TEXT,
+    "mother_bn" TEXT,
+    "religion" TEXT,
+    "gender" TEXT,
+    "marital_status" TEXT,
+    "spouse_name" TEXT,
+    "email" TEXT,
+    "quota" TEXT,
+    "dep_status" TEXT,
+    "nid" TEXT,
+    "breg" TEXT,
+    "passport" TEXT,
+
+    "dob" TIMESTAMP,
+
+    "present_careof" TEXT,
+    "present_village" TEXT,
+    "present_district" TEXT,
+    "present_post" TEXT,
+    "present_postcode" TEXT,
+    "present_upazila" TEXT,
+
+    "permanent_careof" TEXT,
+    "permanent_village" TEXT,
+    "permanent_district" TEXT,
+    "permanent_post" TEXT,
+    "permanent_postcode" TEXT,
+    "permanent_upazila" TEXT,
+
+    "ssc_exam" TEXT,
+    "ssc_board" TEXT,
+    "ssc_roll" TEXT,
+    "ssc_year" TEXT,
+    "ssc_group" TEXT,
+    "ssc_result_type" TEXT,
+    "ssc_result" TEXT,
+
+    "hsc_exam" TEXT,
+    "hsc_board" TEXT,
+    "hsc_roll" TEXT,
+    "hsc_year" TEXT,
+    "hsc_group" TEXT,
+    "hsc_result_type" TEXT,
+    "hsc_result" TEXT,
+
+    "gra_exam" TEXT,
+    "gra_subject" TEXT,
+    "gra_institute" TEXT,
+    "gra_year" TEXT,
+    "gra_duration" TEXT,
+    "gra_result_type" TEXT,
+    "gra_result" TEXT,
+
+    "mas_exam" TEXT,
+    "mas_subject" TEXT,
+    "mas_institute" TEXT,
+    "mas_year" TEXT,
+    "mas_duration" TEXT,
+    "mas_result_type" TEXT,
+    "mas_result" TEXT,
+
+    "fetchedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    "userMobile" TEXT NOT NULL,
+
+    CONSTRAINT "job_data_user_fkey"
+        FOREIGN KEY ("userMobile") REFERENCES "users"("mobileNumber")
+        ON DELETE CASCADE
+);
+
+-- Indexes
+CREATE INDEX "job_data_userMobile_idx" ON "job_data" ("userMobile");
+CREATE INDEX "job_data_customerMobile_idx" ON "job_data" ("customerMobile");
