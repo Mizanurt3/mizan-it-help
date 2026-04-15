@@ -1,8 +1,13 @@
 {
   "compilerOptions": {
+   
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/app/*": ["./app/*"]
     }
-  }
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", ".next"]
 }
-

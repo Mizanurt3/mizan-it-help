@@ -1,5 +1,11 @@
+// app/job-applicants/admin/page.js
 import { Suspense } from 'react';
-import JobApplicantsAdminClient from '@/components/JobApplicantsAdminClient';
+//import JobApplicantsAdminClient from '@/components/JobApplicantsAdminClient';
+
+// Relative import — এটা সবচেয়ে নিরাপদ
+//import JobApplicantsAdminClient from '../../../components/JobApplicantsAdminClient';
+
+
 
 export default function JobApplicantsAdminPage() {
   return (

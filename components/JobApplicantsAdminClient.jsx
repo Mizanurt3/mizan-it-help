@@ -1,3 +1,4 @@
+// components/JobApplicantsAdminClient.jsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -504,7 +505,7 @@ export default function JobApplicantsAdminClient() {
             <input placeholder="Result" value={form.mas_result} onChange={e => setForm({ ...form, mas_result: e.target.value })} />
           </div>
         </div>
-        
+
         <div style={{ textAlign: "center", marginTop: "50px" }}>
           <button 
             type="submit" 
