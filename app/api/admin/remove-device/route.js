@@ -6,10 +6,7 @@ export async function POST(request) {
     const { mobileNumber } = await request.json();
 
     if (!mobileNumber) {
-      return Response.json({ 
-        status: "error", 
-        message: "Mobile number is required" 
-      }, { status: 400 });
+      return Response.json({ status: "error", message: "Mobile number is required" }, { status: 400 });
     }
 
     const result = await pool.query(
@@ -17,24 +14,14 @@ export async function POST(request) {
       [mobileNumber]
     );
 
-    if (result.rows.length === 0) {
-      return Response.json({ 
-        status: "error", 
-        message: "No device binding found for this user" 
-      }, { status: 404 });
-    }
-
     return Response.json({ 
       status: "success", 
-      message: "Device binding removed successfully. User can now login from a new device.",
+      message: "Device binding removed successfully",
       deleted: result.rows[0]
     });
 
   } catch (error) {
     console.error("Remove Device Error:", error);
-    return Response.json({ 
-      status: "error", 
-      message: "Failed to remove device binding" 
-    }, { status: 500 });
+    return Response.json({ status: "error", message: "Failed to remove device" }, { status: 500 });
   }
 }

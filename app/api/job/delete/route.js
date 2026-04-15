@@ -4,19 +4,22 @@ import pool from "@/lib/db";
 export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const mobile = searchParams.get("mobile");
+    const customerMobile = searchParams.get("customerMobile");
+    const userMobile = searchParams.get("userMobile");
 
-    if (!mobile) {
-      return Response.json({ status: "error", message: "Mobile number required" }, { status: 400 });
+    if (!customerMobile || !userMobile) {
+      return Response.json({ status: "error", message: "customerMobile and userMobile required" }, { status: 400 });
     }
 
     const result = await pool.query(
-      "DELETE FROM job_applicants WHERE mobile = $1 RETURNING id, mobile, name",
-      [mobile]
+      `DELETE FROM job_data 
+       WHERE "customerMobile" = $1 AND "userMobile" = $2 
+       RETURNING id, "customerMobile", name`,
+      [customerMobile, userMobile]
     );
 
     if (result.rows.length === 0) {
-      return Response.json({ status: "error", message: "Record not found" }, { status: 404 });
+      return Response.json({ status: "error", message: "Record not found or not authorized" }, { status: 404 });
     }
 
     return Response.json({ 
