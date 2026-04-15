@@ -350,11 +350,161 @@ export default function JobApplicantsAdminClient() {
           {form.mobile ? `Edit Applicant - ${form.mobile}` : "Add New Applicant"}
         </h2>
 
-        {/* তোমার বাকি সব Form UI এখানে আছে (আমি কপি করে রেখেছি, কোনো লাইন বাদ পড়েনি) */}
-        {/* Basic Information, Present Address, Permanent Address, SSC, HSC, Graduation, Masters — সব একই আছে */}
+        {/* Basic Information */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>Basic Information</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <input placeholder="Customer Mobile *" value={form.mobile} onChange={e => setForm({ ...form, mobile: e.target.value })} required />
+            <input placeholder="Name (English)" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+            <input placeholder="নাম (বাংলা)" value={form.name_bn} onChange={e => setForm({ ...form, name_bn: e.target.value })} />
+            <input placeholder="Father's Name" value={form.father} onChange={e => setForm({ ...form, father: e.target.value })} />
+            <input placeholder="Father BN" value={form.father_bn} onChange={e => setForm({ ...form, father_bn: e.target.value })} />
+            <input placeholder="Mother's Name" value={form.mother} onChange={e => setForm({ ...form, mother: e.target.value })} />
+            <input placeholder="Mother BN" value={form.mother_bn} onChange={e => setForm({ ...form, mother_bn: e.target.value })} />
+            <input type="date" value={form.dob} onChange={e => setForm({ ...form, dob: e.target.value })} />
+            <select value={form.religion} onChange={e => setForm({ ...form, religion: e.target.value })}>
+              <option value="">Religion</option>{religions.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+            <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })}>
+              <option value="">Gender</option>{genders.map(g => <option key={g} value={g}>{g}</option>)}
+            </select>
+            <select value={form.marital_status} onChange={e => setForm({ ...form, marital_status: e.target.value })}>
+              <option value="">Marital Status</option>{maritalStatuses.map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <input placeholder="Spouse Name" value={form.spouse_name} onChange={e => setForm({ ...form, spouse_name: e.target.value })} />
+            <select value={form.quota} onChange={e => setForm({ ...form, quota: e.target.value })}>
+              <option value="">Quota</option>{quotas.map(q => <option key={q} value={q}>{q}</option>)}
+            </select>
+            <input placeholder="Dep Status" value={form.dep_status} onChange={e => setForm({ ...form, dep_status: e.target.value })} />
+            <input placeholder="NID" value={form.nid} onChange={e => setForm({ ...form, nid: e.target.value })} />
+            <input placeholder="Email" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+          </div>
+        </div>
 
-        {/* ... (তোমার দেওয়া পুরো form অংশটা এখানে paste করো, কোনো পরিবর্তন ছাড়াই) ... */}
+        {/* Present Address */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>Present Address</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <select value={form.present_district} onChange={e => handleDistrictChange("present", e.target.value)} required>
+              <option value="">Select District</option>
+              {districtList.map(d => <option key={d.value} value={d.value}>{d.name}</option>)}
+            </select>
+            <select value={form.present_upazila} onChange={e => setForm({ ...form, present_upazila: e.target.value })} required>
+              <option value="">Select Upazila</option>
+              {presentUpazilas.map(u => <option key={u} value={u}>{u}</option>)}
+            </select>
+            <input placeholder="Care Of" value={form.present_careof} onChange={e => setForm({ ...form, present_careof: e.target.value })} />
+            <input placeholder="Village/Road/House" value={form.present_village} onChange={e => setForm({ ...form, present_village: e.target.value })} />
+            <input placeholder="Post Office" value={form.present_post} onChange={e => setForm({ ...form, present_post: e.target.value })} />
+            <input placeholder="Post Code" value={form.present_postcode} onChange={e => setForm({ ...form, present_postcode: e.target.value })} />
+          </div>
+        </div>
 
+        {/* Permanent Address */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>Permanent Address</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <select value={form.permanent_district} onChange={e => handleDistrictChange("permanent", e.target.value)} required>
+              <option value="">Select District</option>
+              {districtList.map(d => <option key={d.value} value={d.value}>{d.name}</option>)}
+            </select>
+            <select value={form.permanent_upazila} onChange={e => setForm({ ...form, permanent_upazila: e.target.value })} required>
+              <option value="">Select Upazila</option>
+              {permanentUpazilas.map(u => <option key={u} value={u}>{u}</option>)}
+            </select>
+            <input placeholder="Care Of" value={form.permanent_careof} onChange={e => setForm({ ...form, permanent_careof: e.target.value })} />
+            <input placeholder="Village/Road/House" value={form.permanent_village} onChange={e => setForm({ ...form, permanent_village: e.target.value })} />
+            <input placeholder="Post Office" value={form.permanent_post} onChange={e => setForm({ ...form, permanent_post: e.target.value })} />
+            <input placeholder="Post Code" value={form.permanent_postcode} onChange={e => setForm({ ...form, permanent_postcode: e.target.value })} />
+          </div>
+        </div>
+
+        {/* SSC Section */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>SSC / Equivalent</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <select value={form.ssc_exam} onChange={e => setForm({ ...form, ssc_exam: e.target.value })}>
+              <option value="">Select Exam</option>
+              {sscExams.map(ex => <option key={ex} value={ex}>{ex}</option>)}
+            </select>
+            <select value={form.ssc_board} onChange={e => setForm({ ...form, ssc_board: e.target.value })}>
+              <option value="">Select Board</option>
+              {boards.map(b => <option key={b} value={b}>{b}</option>)}
+            </select>
+            <select value={form.ssc_result_type} onChange={e => setForm({ ...form, ssc_result_type: e.target.value })}>
+              <option value="">Result Type</option>
+              {resultTypes.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+            <select value={form.ssc_year} onChange={e => setForm({ ...form, ssc_year: e.target.value })}>
+              <option value="">Passing Year</option>
+              {years.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+            <input placeholder="Roll No" value={form.ssc_roll} onChange={e => setForm({ ...form, ssc_roll: e.target.value })} />
+            <input placeholder="Group" value={form.ssc_group} onChange={e => setForm({ ...form, ssc_group: e.target.value })} />
+            <input placeholder="Result" value={form.ssc_result} onChange={e => setForm({ ...form, ssc_result: e.target.value })} />
+          </div>
+        </div>
+
+        {/* HSC Section */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>HSC / Equivalent</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <select value={form.hsc_exam} onChange={e => setForm({ ...form, hsc_exam: e.target.value })}>
+              <option value="">Select Exam</option>
+              {sscExams.map(ex => <option key={ex} value={ex}>{ex}</option>)}
+            </select>
+            <select value={form.hsc_board} onChange={e => setForm({ ...form, hsc_board: e.target.value })}>
+              <option value="">Select Board</option>
+              {boards.map(b => <option key={b} value={b}>{b}</option>)}
+            </select>
+            <select value={form.hsc_result_type} onChange={e => setForm({ ...form, hsc_result_type: e.target.value })}>
+              <option value="">Result Type</option>
+              {resultTypes.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+            <select value={form.hsc_year} onChange={e => setForm({ ...form, hsc_year: e.target.value })}>
+              <option value="">Passing Year</option>
+              {years.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+            <input placeholder="Roll No" value={form.hsc_roll} onChange={e => setForm({ ...form, hsc_roll: e.target.value })} />
+            <input placeholder="Group" value={form.hsc_group} onChange={e => setForm({ ...form, hsc_group: e.target.value })} />
+            <input placeholder="Result" value={form.hsc_result} onChange={e => setForm({ ...form, hsc_result: e.target.value })} />
+          </div>
+        </div>
+
+        {/* Graduation Section */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>Graduation</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <input placeholder="Exam" value={form.gra_exam} onChange={e => setForm({ ...form, gra_exam: e.target.value })} />
+            <input placeholder="Subject" value={form.gra_subject} onChange={e => setForm({ ...form, gra_subject: e.target.value })} />
+            <input placeholder="Institute" value={form.gra_institute} onChange={e => setForm({ ...form, gra_institute: e.target.value })} />
+            <input placeholder="Year" value={form.gra_year} onChange={e => setForm({ ...form, gra_year: e.target.value })} />
+            <input placeholder="Duration" value={form.gra_duration} onChange={e => setForm({ ...form, gra_duration: e.target.value })} />
+            <select value={form.gra_result_type} onChange={e => setForm({ ...form, gra_result_type: e.target.value })}>
+              <option value="">Result Type</option>
+              {resultTypes.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+            <input placeholder="Result" value={form.gra_result} onChange={e => setForm({ ...form, gra_result: e.target.value })} />
+          </div>
+        </div>
+
+        {/* Masters Section */}
+        <div style={{ marginBottom: "40px" }}>
+          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>Masters</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginTop: "18px" }}>
+            <input placeholder="Exam" value={form.mas_exam} onChange={e => setForm({ ...form, mas_exam: e.target.value })} />
+            <input placeholder="Subject" value={form.mas_subject} onChange={e => setForm({ ...form, mas_subject: e.target.value })} />
+            <input placeholder="Institute" value={form.mas_institute} onChange={e => setForm({ ...form, mas_institute: e.target.value })} />
+            <input placeholder="Year" value={form.mas_year} onChange={e => setForm({ ...form, mas_year: e.target.value })} />
+            <input placeholder="Duration" value={form.mas_duration} onChange={e => setForm({ ...form, mas_duration: e.target.value })} />
+            <select value={form.mas_result_type} onChange={e => setForm({ ...form, mas_result_type: e.target.value })}>
+              <option value="">Result Type</option>
+              {resultTypes.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+            <input placeholder="Result" value={form.mas_result} onChange={e => setForm({ ...form, mas_result: e.target.value })} />
+          </div>
+        </div>
+        
         <div style={{ textAlign: "center", marginTop: "50px" }}>
           <button 
             type="submit" 
@@ -365,6 +515,8 @@ export default function JobApplicantsAdminClient() {
           </button>
         </div>
       </form>
+
+
     </div>
   );
 }
