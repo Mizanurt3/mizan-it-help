@@ -75,6 +75,7 @@ export async function GET(request) {
         mas_duration, 
         mas_result_type, 
         mas_result,
+        others,
         "fetchedAt"
       FROM job_data 
       WHERE "userMobile" = $1

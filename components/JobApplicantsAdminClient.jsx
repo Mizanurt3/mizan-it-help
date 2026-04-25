@@ -95,13 +95,95 @@ const upazilaData = {
 const religions = ["Islam", "Hinduism", "Buddhism", "Christianity", "Others"];
 const genders = ["Male", "Female", "Others"];
 const maritalStatuses = ["Single", "Married", "Divorced", "Widowed"];
-const quotas = ["General", "Freedom Fighter", "Women", "Ethnic Minority", "Disabled", "Non-Quota"];
-const groups = ["Science", "Humanities", "Business Studies", "Vocational", "Others"];
+const quotas = ["Child of Freedom Fighter", "Child of War Heroine (Birangana)", "Ethnic Minority", "Not Applicable"];
+const dep_statuses  = ["Govt. Employee", "Semi Govt. Employee", "Autonomous", "Departmental Candidate", "Not Applicable"];
+
+const ssc_groups = ["Science", "Humanities", "Business Studies", "Vocational", "Others"];
+
+const ssc_vocational_groups = [
+    "Agro-Based Food",
+    "Architectural Drafting with CAD",
+    "Automotive",
+    "Building Maintenance",
+    "Ceramic",
+    "Civil Construction",
+    "Civil Drafting with CAD",
+    "Computer and Information Technology",
+    "Dress Making",
+    "Dyeing, Printing and Finishing",
+    "Electrical Maintenance Works",
+    "Farm Machinery",
+    "Fish Culture and Breeding",
+    "Food Processing and Preservation",
+    "Fruit and Vegetable Cultivation",
+    "General Electrical Works",
+    "General Electronics",
+    "General Mechanics",
+    "Glass",
+    "Knitting",
+    "Livestock Rearing and Farming",
+    "Machine Tools Operation",
+    "Mechanical Drafting with CAD",
+    "Patient Care Technique",
+    "Plumbing and Pipe Fittings",
+    "Poultry Rearing and Farming",
+    "Refrigeration and Air Conditioning",
+    "Shrimp Culture and Breeding",
+    "Welding and Fabrication",
+    "Wood Working",
+    "Other"
+];
 
 const sscExams = ["S.S.C", "Dakhil", "S.S.C Vocational", "O Level/Cambridge", "S.S.C Equivalent", "Dakhil Vocational"];
-const boards = ["Barishal", "Chittagong", "Cumilla", "Dhaka", "Dinajpur", "Jashore", "Madrasah", "Mymensingh", "Rajshahi", "Sylhet", "Open University", "Others"];
+
+const hscExams = ["H.S.C", "Alim", "Business Management", "Diploma-in-Engineering", "A Level/Sr. Cambridge", "H.S.C Equivalent", "Diploma-in-Medival Technology","H.S.C Vocational","H.S.C (BM)","Diploma in Pharmacy", "C in ED"];
+const hscGroups = [
+    "Business Studies",
+    "Education",
+    "General",
+    "Humanities",
+    "Science",
+    "Other"
+];
+const hscVocationalGroups = [
+    "Agro Machinery",
+    "Automobile",
+    "Building Construction and Maintenance",
+    "Clothing and Garments Finishing",
+    "Computer Operation and Maintenance",
+    "Drafting Civil",
+    "Electrical Works and Maintenance",
+    "Electronic Control and Communication",
+    "Fish Culture and Breeding",
+    "Industrial Wood Working",
+    "Machine Tools Operation and Maintenance",
+    "Poultry Rearing and Farming",
+    "Refrigeration and Air-conditioning",
+    "Welding and Fabrication",
+    "Other"
+];
+//const boards = ["Barishal", "Chittagong", "Cumilla", "Dhaka", "Dinajpur", "Jashore", "Madrasah", "Mymensingh", "Rajshahi", "Sylhet", "Open University", "Others"];
+const boards = [
+    "Barishal",
+    "Chittagong",
+    "Cumilla",
+    "Dhaka",
+    "Dinajpur",
+    "Jashore",
+    "Madrasah",
+    "Mymensingh",
+    "Rajshahi",
+    "Sylhet",
+    "Open University",
+    "Edexcel International",
+    "Cambridge International - IGCE",
+    "Pharmacy Council of Bangladesh",
+    "The State Medical Faculty of Bangladesh",
+    "Bangladesh Technical Education Board (BTEB)",
+    "Other"
+];
 const resultTypes = ["1st Division", "2nd Division", "3rd Division", "GPA(out of 4)", "GPA(out of 5)"];
-const years = Array.from({ length: 12 }, (_, i) => (2015 + i).toString());
+const years = Array.from({ length: 40 }, (_, i) => (1991 + i).toString());
 
 export default function JobApplicantsAdminClient() {
   const searchParams = useSearchParams();
@@ -119,7 +201,7 @@ export default function JobApplicantsAdminClient() {
 
   const [form, setForm] = useState({
     mobile: "", name: "", name_bn: "", father: "", father_bn: "", mother: "", mother_bn: "",
-    religion: "", gender: "", marital_status: "", spouse_name: "", email: "",
+    religion: "", gender: "", marital_status: "", spouse_name: "", email: "", others: "",
     quota: "", dep_status: "", nid: "", breg: "", passport: "", dob: "",
     present_careof: "", present_village: "", present_district: "", present_post: "",
     present_postcode: "", present_upazila: "",
@@ -188,9 +270,10 @@ export default function JobApplicantsAdminClient() {
       marital_status: app.marital_status || "", 
       spouse_name: app.spouse_name || "",
       email: app.email || "", 
+      others: app.others || "",
       quota: app.quota || "", 
       dep_status: app.dep_status || "",
-      nid: app.nid || "", breg: app.breg || "", passport: app.passport || "",
+      nid: app.nid || "", breg: app.breg || "", passport: app.passport || "", 
       dob: app.dob ? app.dob.split("T")[0] : "",
       present_careof: app.present_careof || "", present_village: app.present_village || "",
       present_district: app.present_district || "", present_post: app.present_post || "",
@@ -248,7 +331,7 @@ export default function JobApplicantsAdminClient() {
     setForm({
       mobile: "", name: "", name_bn: "", father: "", father_bn: "", mother: "", mother_bn: "",
       religion: "", gender: "", marital_status: "", spouse_name: "", email: "",
-      quota: "", dep_status: "", nid: "", breg: "", passport: "", dob: "",
+      quota: "", dep_status: "", nid: "", breg: "", passport: "", dob: "",others: "",
       present_careof: "", present_village: "", present_district: "", present_post: "",
       present_postcode: "", present_upazila: "",
       permanent_careof: "", permanent_village: "", permanent_district: "", permanent_post: "",
@@ -351,36 +434,235 @@ export default function JobApplicantsAdminClient() {
           {form.mobile ? `Edit Applicant - ${form.mobile}` : "Add New Applicant"}
         </h2>
 
-        {/* Basic Information */}
-        <div style={{ marginBottom: "40px" }}>
-          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>Basic Information</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px", marginTop: "18px" }}>
-            <input placeholder="Customer Mobile *" value={form.mobile} onChange={e => setForm({ ...form, mobile: e.target.value })} required />
-            <input placeholder="Name (English)" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
-            <input placeholder="নাম (বাংলা)" value={form.name_bn} onChange={e => setForm({ ...form, name_bn: e.target.value })} />
-            <input placeholder="Father's Name" value={form.father} onChange={e => setForm({ ...form, father: e.target.value })} />
-            <input placeholder="Father BN" value={form.father_bn} onChange={e => setForm({ ...form, father_bn: e.target.value })} />
-            <input placeholder="Mother's Name" value={form.mother} onChange={e => setForm({ ...form, mother: e.target.value })} />
-            <input placeholder="Mother BN" value={form.mother_bn} onChange={e => setForm({ ...form, mother_bn: e.target.value })} />
-            <input type="date" value={form.dob} onChange={e => setForm({ ...form, dob: e.target.value })} />
-            <select value={form.religion} onChange={e => setForm({ ...form, religion: e.target.value })}>
-              <option value="">Religion</option>{religions.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-            <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })}>
-              <option value="">Gender</option>{genders.map(g => <option key={g} value={g}>{g}</option>)}
-            </select>
-            <select value={form.marital_status} onChange={e => setForm({ ...form, marital_status: e.target.value })}>
-              <option value="">Marital Status</option>{maritalStatuses.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
-            <input placeholder="Spouse Name" value={form.spouse_name} onChange={e => setForm({ ...form, spouse_name: e.target.value })} />
-            <select value={form.quota} onChange={e => setForm({ ...form, quota: e.target.value })}>
-              <option value="">Quota</option>{quotas.map(q => <option key={q} value={q}>{q}</option>)}
-            </select>
-            <input placeholder="Dep Status" value={form.dep_status} onChange={e => setForm({ ...form, dep_status: e.target.value })} />
-            <input placeholder="NID" value={form.nid} onChange={e => setForm({ ...form, nid: e.target.value })} />
-            <input placeholder="Email" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-          </div>
-        </div>
+       {/* Basic Information */}
+     {/* Basic Information */}
+<div style={{ marginBottom: "40px" }}>
+  <h3 style={{ 
+    background: "#006400", 
+    color: "white", 
+    padding: "12px 18px", 
+    borderRadius: "8px",
+    marginBottom: "25px"
+  }}>
+    Basic Information
+  </h3>
+
+  <div style={{ 
+    display: "grid", 
+    gridTemplateColumns: "240px 1fr", 
+    gap: "18px 30px", 
+    alignItems: "center" 
+  }}>
+
+    {/* Mobile Number */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Mobile Number <span style={{ color: "red" }}>*</span>
+    </label>
+    <input 
+      placeholder="Enter Mobile Number" 
+      value={form.mobile} 
+      onChange={e => setForm({ ...form, mobile: e.target.value })} 
+      required 
+      style={{ width: "100%" }}
+    />
+
+    {/* Applicant's Name English */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Applicant's Name
+    </label>
+    <input 
+      placeholder="Enter Name in English" 
+      value={form.name} 
+      onChange={e => setForm({ ...form, name: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Applicant's Name Bengali */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      আবেদনকারীর নাম (বাংলায়)
+    </label>
+    <input 
+      placeholder="বাংলায় নাম লিখুন" 
+      value={form.name_bn} 
+      onChange={e => setForm({ ...form, name_bn: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Father's Name */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Father's Name
+    </label>
+    <input 
+      placeholder="Father's Name" 
+      value={form.father} 
+      onChange={e => setForm({ ...form, father: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      পিতার নাম (বাংলায়)
+    </label>
+    <input 
+      placeholder="পিতার নাম (বাংলা)" 
+      value={form.father_bn} 
+      onChange={e => setForm({ ...form, father_bn: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Mother's Name */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Mother's Name
+    </label>
+    <input 
+      placeholder="Mother's Name" 
+      value={form.mother} 
+      onChange={e => setForm({ ...form, mother: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      মাতার নাম (বাংলায়)
+    </label>
+    <input 
+      placeholder="মাতার নাম (বাংলা)" 
+      value={form.mother_bn} 
+      onChange={e => setForm({ ...form, mother_bn: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Date of Birth */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Date of Birth
+    </label>
+    <input 
+      type="date" 
+      value={form.dob} 
+      onChange={e => setForm({ ...form, dob: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Gender */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Gender
+    </label>
+    <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })}>
+      <option value="">Select Gender</option>
+      {genders.map(g => <option key={g} value={g}>{g}</option>)}
+    </select>
+
+    {/* Marital Status */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Marital Status
+    </label>
+    <select value={form.marital_status} onChange={e => setForm({ ...form, marital_status: e.target.value })}>
+      <option value="">Select Marital Status</option>
+      {maritalStatuses.map(m => <option key={m} value={m}>{m}</option>)}
+    </select>
+
+    {/* Spouse Name */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Spouse Name
+    </label>
+    <input 
+      placeholder="Spouse Name (If Married)" 
+      value={form.spouse_name} 
+      onChange={e => setForm({ ...form, spouse_name: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Religion */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Religion
+    </label>
+    <select value={form.religion} onChange={e => setForm({ ...form, religion: e.target.value })}>
+      <option value="">Select Religion</option>
+      {religions.map(r => <option key={r} value={r}>{r}</option>)}
+    </select>
+
+    {/* Nationality */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Nationality
+    </label>
+    <select value={form.nationality || "Bangladeshi"} onChange={e => setForm({ ...form, nationality: e.target.value })}>
+      <option value="Bangladeshi">Bangladeshi</option>
+    </select>
+
+    {/* Quota */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Quota
+    </label>
+    <select value={form.quota} onChange={e => setForm({ ...form, quota: e.target.value })}>
+      <option value="">Select Quota</option>
+      {quotas.map(q => <option key={q} value={q}>{q}</option>)}
+    </select>
+
+    {/* dep_statuses */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Departmental Status*
+    </label>
+    <select value={form.dep_status} onChange={e => setForm({ ...form, dep_status: e.target.value })}>
+      <option value="">Select Departmental Status*</option>
+      {dep_statuses.map(q => <option key={q} value={q}>{q}</option>)}
+    </select>
+
+    {/* NID */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      NID Number
+    </label>
+    <input 
+      placeholder="Enter NID Number" 
+      value={form.nid} 
+      onChange={e => setForm({ ...form, nid: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Birth Registration */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Birth Registration No
+    </label>
+    <input 
+      placeholder="Birth REG NO" 
+      value={form.breg} 
+      onChange={e => setForm({ ...form, breg: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Passport */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Passport Number
+    </label>
+    <input 
+      placeholder="Passport Number" 
+      value={form.passport} 
+      onChange={e => setForm({ ...form, passport: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+    {/* Email */}
+    <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Email Address
+    </label>
+    <input 
+      type="email" 
+      placeholder="Enter Email Address" 
+      value={form.email} 
+      onChange={e => setForm({ ...form, email: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+
+     {/* others */}
+     <label style={{ textAlign: "right", fontWeight: "500" }}>
+      Others
+    </label>
+    <input 
+      placeholder="Enter others Info like Body height, weight, disability info etc." 
+      value={form.others}
+      onChange={e => setForm({ ...form, others: e.target.value })} 
+      style={{ width: "100%" }}
+    />
+    
+  </div>
+</div>
 
         {/* Present Address */}
         <div style={{ marginBottom: "40px" }}>
@@ -420,57 +702,256 @@ export default function JobApplicantsAdminClient() {
           </div>
         </div>
 
-        {/* SSC Section */}
-        <div style={{ marginBottom: "40px" }}>
-          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>SSC / Equivalent</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginTop: "18px" }}>
-            <select value={form.ssc_exam} onChange={e => setForm({ ...form, ssc_exam: e.target.value })}>
-              <option value="">Select Exam</option>
-              {sscExams.map(ex => <option key={ex} value={ex}>{ex}</option>)}
-            </select>
-            <select value={form.ssc_board} onChange={e => setForm({ ...form, ssc_board: e.target.value })}>
-              <option value="">Select Board</option>
-              {boards.map(b => <option key={b} value={b}>{b}</option>)}
-            </select>
-            <select value={form.ssc_result_type} onChange={e => setForm({ ...form, ssc_result_type: e.target.value })}>
-              <option value="">Result Type</option>
-              {resultTypes.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-            <select value={form.ssc_year} onChange={e => setForm({ ...form, ssc_year: e.target.value })}>
-              <option value="">Passing Year</option>
-              {years.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
-            <input placeholder="Roll No" value={form.ssc_roll} onChange={e => setForm({ ...form, ssc_roll: e.target.value })} />
-            <input placeholder="Group" value={form.ssc_group} onChange={e => setForm({ ...form, ssc_group: e.target.value })} />
-            <input placeholder="Result" value={form.ssc_result} onChange={e => setForm({ ...form, ssc_result: e.target.value })} />
-          </div>
-        </div>
+       {/* SSC / Equivalent */}
+{/* SSC / Equivalent Level */}
+<div style={{ marginBottom: "40px" }}>
+  <h3 style={{ 
+    background: "#006400", 
+    color: "white", 
+    padding: "12px 18px", 
+    borderRadius: "8px",
+    marginBottom: "20px"
+  }}>
+    SSC / Equivalent Level
+  </h3>
 
-        {/* HSC Section */}
-        <div style={{ marginBottom: "40px" }}>
-          <h3 style={{ background: "#006400", color: "white", padding: "12px 18px", borderRadius: "8px" }}>HSC / Equivalent</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginTop: "18px" }}>
-            <select value={form.hsc_exam} onChange={e => setForm({ ...form, hsc_exam: e.target.value })}>
-              <option value="">Select Exam</option>
-              {sscExams.map(ex => <option key={ex} value={ex}>{ex}</option>)}
-            </select>
-            <select value={form.hsc_board} onChange={e => setForm({ ...form, hsc_board: e.target.value })}>
-              <option value="">Select Board</option>
-              {boards.map(b => <option key={b} value={b}>{b}</option>)}
-            </select>
-            <select value={form.hsc_result_type} onChange={e => setForm({ ...form, hsc_result_type: e.target.value })}>
-              <option value="">Result Type</option>
-              {resultTypes.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-            <select value={form.hsc_year} onChange={e => setForm({ ...form, hsc_year: e.target.value })}>
-              <option value="">Passing Year</option>
-              {years.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
-            <input placeholder="Roll No" value={form.hsc_roll} onChange={e => setForm({ ...form, hsc_roll: e.target.value })} />
-            <input placeholder="Group" value={form.hsc_group} onChange={e => setForm({ ...form, hsc_group: e.target.value })} />
-            <input placeholder="Result" value={form.hsc_result} onChange={e => setForm({ ...form, hsc_result: e.target.value })} />
-          </div>
-        </div>
+  <div style={{ 
+    display: "grid", 
+    gridTemplateColumns: "1fr 1fr", 
+    gap: "25px" 
+  }}>
+
+    {/* Left Column */}
+    <div style={{ display: "grid", gridTemplateColumns: "110px 1fr", gap: "16px", alignItems: "center" }}>
+      
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Examination</label>
+      <select 
+        value={form.ssc_exam} 
+        onChange={e => {
+          const newExam = e.target.value;
+          setForm({ 
+            ...form, 
+            ssc_exam: newExam,
+            ssc_group: ""   // নতুন এক্সাম সিলেক্ট করলে গ্রুপ রিসেট
+          });
+        }}
+      >
+        <option value="">Select Exam</option>
+        {sscExams.map(ex => (
+          <option key={ex} value={ex}>{ex}</option>
+        ))}
+      </select>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Roll No</label>
+      <input 
+        placeholder="Enter Roll No" 
+        value={form.ssc_roll} 
+        onChange={e => setForm({ ...form, ssc_roll: e.target.value })} 
+        style={{ width: "100%" }}
+      />
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Group/Subject</label>
+      <select 
+        value={form.ssc_group} 
+        onChange={e => setForm({ ...form, ssc_group: e.target.value })}
+        style={{ borderColor: form.ssc_group ? "" : "#ff0000" }}   // যদি খালি থাকে তাহলে লাল বর্ডার
+      >
+        <option value="">Select</option>
+        {(form.ssc_exam === "S.S.C Vocational" ? ssc_vocational_groups : ssc_groups).map(group => (
+          <option key={group} value={group}>{group}</option>
+        ))}
+      </select>
+
+    </div>
+
+    {/* Right Column */}
+    <div style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: "16px", alignItems: "center" }}>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Board</label>
+      <select 
+        value={form.ssc_board} 
+        onChange={e => setForm({ ...form, ssc_board: e.target.value })}
+      >
+        <option value="">Select Board</option>
+        {boards.map(b => (
+          <option key={b} value={b}>{b}</option>
+        ))}
+      </select>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Result</label>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <select 
+          value={form.ssc_result_type} 
+          onChange={e => setForm({ ...form, ssc_result_type: e.target.value })}
+          style={{ flex: 1 }}
+        >
+          <option value="">GPA(out of 5)</option>
+          {resultTypes.map(r => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
+        <input 
+          placeholder="3.93" 
+          value={form.ssc_result} 
+          onChange={e => setForm({ ...form, ssc_result: e.target.value })} 
+          style={{ flex: 1, width: "100%" }}
+        />
+      </div>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Passing Year</label>
+      <select 
+        value={form.ssc_year} 
+        onChange={e => setForm({ ...form, ssc_year: e.target.value })}
+      >
+        <option value="">Select Year</option>
+        {years.map(y => (
+          <option key={y} value={y}>{y}</option>
+        ))}
+      </select>
+
+    </div>
+
+  </div>
+
+  {/* If Applicable Checkbox */}
+  <div style={{ marginTop: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+    <input 
+      type="checkbox" 
+      id="ssc_applicable"
+      checked={form.ssc_applicable || false}
+      onChange={e => setForm({ ...form, ssc_applicable: e.target.checked })}
+    />
+    <label htmlFor="ssc_applicable" style={{ margin: 0, cursor: "pointer" }}>
+      If Applicable
+    </label>
+  </div>
+</div>
+
+{/* HSC / Equivalent Level */}
+<div style={{ marginBottom: "40px" }}>
+  <h3 style={{ 
+    background: "#006400", 
+    color: "white", 
+    padding: "12px 18px", 
+    borderRadius: "8px",
+    marginBottom: "20px"
+  }}>
+    HSC / Equivalent Level
+  </h3>
+
+  <div style={{ 
+    display: "grid", 
+    gridTemplateColumns: "1fr 1fr", 
+    gap: "25px" 
+  }}>
+
+    {/* Left Column */}
+    <div style={{ display: "grid", gridTemplateColumns: "110px 1fr", gap: "16px", alignItems: "center" }}>
+      
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Examination</label>
+      <select 
+        value={form.hsc_exam} 
+        onChange={e => {
+          const newExam = e.target.value;
+          setForm({ 
+            ...form, 
+            hsc_exam: newExam,
+            hsc_group: ""   // নতুন এক্সাম সিলেক্ট করলে গ্রুপ রিসেট
+          });
+        }}
+      >
+        <option value="">Select Exam</option>
+        {hscExams.map(ex => (
+          <option key={ex} value={ex}>{ex}</option>
+        ))}
+      </select>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Roll No</label>
+      <input 
+        placeholder="Enter Roll No" 
+        value={form.hsc_roll} 
+        onChange={e => setForm({ ...form, hsc_roll: e.target.value })} 
+        style={{ width: "100%" }}
+      />
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Group/Subject</label>
+      <select 
+        value={form.hsc_group} 
+        onChange={e => setForm({ ...form, hsc_group: e.target.value })}
+        style={{ borderColor: form.hsc_group ? "" : "#ff0000" }}
+      >
+        <option value="">Select</option>
+        {(form.hsc_exam === "H.S.C Vocational" ? hscVocationalGroups : hscGroups).map(group => (
+          <option key={group} value={group}>{group}</option>
+        ))}
+      </select>
+
+    </div>
+
+    {/* Right Column */}
+    <div style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: "16px", alignItems: "center" }}>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Board</label>
+      <select 
+        value={form.hsc_board} 
+        onChange={e => setForm({ ...form, hsc_board: e.target.value })}
+      >
+        <option value="">Select Board</option>
+        {boards.map(b => (
+          <option key={b} value={b}>{b}</option>
+        ))}
+      </select>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Result</label>
+      <div style={{ display: "flex", gap: "10px" }}>
+        <select 
+          value={form.hsc_result_type} 
+          onChange={e => setForm({ ...form, hsc_result_type: e.target.value })}
+          style={{ flex: 1 }}
+        >
+          <option value="">GPA(out of 5)</option>
+          {resultTypes.map(r => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
+        <input 
+          placeholder="3.50" 
+          value={form.hsc_result} 
+          onChange={e => setForm({ ...form, hsc_result: e.target.value })} 
+          style={{ flex: 1, width: "100%" }}
+        />
+      </div>
+
+      <label style={{ textAlign: "right", fontWeight: "500" }}>Passing Year</label>
+      <select 
+        value={form.hsc_year} 
+        onChange={e => setForm({ ...form, hsc_year: e.target.value })}
+      >
+        <option value="">Select Year</option>
+        {years.map(y => (
+          <option key={y} value={y}>{y}</option>
+        ))}
+      </select>
+
+    </div>
+
+  </div>
+
+  {/* If Applicable Checkbox */}
+  <div style={{ marginTop: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+    <input 
+      type="checkbox" 
+      id="hsc_applicable"
+      checked={form.hsc_applicable || false}
+      onChange={e => setForm({ ...form, hsc_applicable: e.target.checked })}
+    />
+    <label htmlFor="hsc_applicable" style={{ margin: 0, cursor: "pointer" }}>
+      If Applicable
+    </label>
+  </div>
+</div>
+
+      
 
         {/* Graduation Section */}
         <div style={{ marginBottom: "40px" }}>

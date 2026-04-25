@@ -31,6 +31,7 @@ export async function POST(request) {
       data.nid || null,
       data.breg || null,
       data.passport || null,
+      
       data.dob || null,
       data.present_careof || null,
       data.present_village || null,
@@ -71,7 +72,8 @@ export async function POST(request) {
       data.mas_year || null,
       data.mas_duration || null,
       data.mas_result_type || null,   // $58
-      data.mas_result || null         // $59
+      data.mas_result || null ,        // $59
+      data.others || null
     ];
 
     const result = await pool.query(`
@@ -86,12 +88,12 @@ export async function POST(request) {
         ssc_exam, ssc_board, ssc_roll, ssc_year, ssc_group, ssc_result_type, ssc_result,
         hsc_exam, hsc_board, hsc_roll, hsc_year, hsc_group, hsc_result_type, hsc_result,
         gra_exam, gra_subject, gra_institute, gra_year, gra_duration, gra_result_type, gra_result,
-        mas_exam, mas_subject, mas_institute, mas_year, mas_duration, mas_result_type, mas_result
+        mas_exam, mas_subject, mas_institute, mas_year, mas_duration, mas_result_type, mas_result,others
       ) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, 
               $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, 
               $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, 
-              $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59)
+              $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59,$60)
       ON CONFLICT ("customerMobile", "userMobile") 
       DO UPDATE SET
         name = EXCLUDED.name,
@@ -151,7 +153,9 @@ export async function POST(request) {
         mas_duration = EXCLUDED.mas_duration,
         mas_result_type = EXCLUDED.mas_result_type,
         mas_result = EXCLUDED.mas_result,
+        others = EXCLUDED.others,
         "fetchedAt" = CURRENT_TIMESTAMP
+        
       RETURNING id, "customerMobile", "userMobile", name;
     `, values);
 
